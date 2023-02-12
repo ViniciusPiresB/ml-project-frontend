@@ -1,5 +1,6 @@
 const APIUrl = "http://localhost:3000/";
 const ordersTable = document.getElementById("orders-table");
+const warningText = document.getElementById("warning");
 
 const sleep = (s) => new Promise((res) => setTimeout(res, s * 1000));
 
@@ -10,6 +11,11 @@ const sleep = (s) => new Promise((res) => setTimeout(res, s * 1000));
     const response = await fetch(APIUrl + "order");
     const responseData = await response.json();
 
+    if (response.status == 401) {
+      warningText.innerHTML = responseData.message;
+      throw new Error("User token invalid.");
+    }
+
     const quantityOfOrdersFromApi = responseData.length;
     const quantityOfOrdersInHtml = ordersQuantityInHtml.length;
 
@@ -18,7 +24,7 @@ const sleep = (s) => new Promise((res) => setTimeout(res, s * 1000));
       generateTable(responseData);
     }
 
-    await sleep(4);
+    await sleep(60);
   }
 })();
 
@@ -59,6 +65,25 @@ const generateTable = async (orders) => {
       }
 
       const cell = document.createElement("td");
+
+      if (keys[j] == "date_of_order") {
+        const utcDate = new Date(orders[i][keys[j]]);
+        const brDateString = utcDate.toLocaleString("en-GB", {
+          timeZone: "America/Sao_Paulo"
+        });
+
+        const dayMonth = brDateString.substring(0, 5);
+        const hour = brDateString.substring(12, 17);
+
+        const hourDayMonth = `${hour} ${dayMonth}`;
+
+        const cellText = document.createTextNode(hourDayMonth);
+
+        cell.appendChild(cellText);
+        row.appendChild(cell);
+        continue;
+      }
+
       const cellText = document.createTextNode(orders[i][keys[j]]);
 
       cell.appendChild(cellText);
@@ -74,6 +99,4 @@ const generateTable = async (orders) => {
 
   tbl.appendChild(tblBody);
   ordersTable.appendChild(tbl);
-
-  tbl.setAttribute("border", "2px");
 };
