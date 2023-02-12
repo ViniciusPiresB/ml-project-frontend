@@ -24,7 +24,7 @@ const sleep = (s) => new Promise((res) => setTimeout(res, s * 1000));
       generateTable(responseData);
     }
 
-    await sleep(60);
+    await sleep(30);
   }
 })();
 
