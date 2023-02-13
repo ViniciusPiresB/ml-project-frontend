@@ -68,6 +68,7 @@ const generateTable = async (orders) => {
 
       if (keys[j] == "date_of_order") {
         const utcDate = new Date(orders[i][keys[j]]);
+        utcDate.setHours(utcDate.getHours() + 4);
         const brDateString = utcDate.toLocaleString("en-GB", {
           timeZone: "America/Sao_Paulo"
         });
