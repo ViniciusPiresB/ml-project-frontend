@@ -1,4 +1,4 @@
-const APIUrl = "http://localhost:3000/";
+const APIUrl = "https://ml-project-backend.vercel.app/";
 const ordersTable = document.getElementById("orders-table");
 const warningText = document.getElementById("warning");
 
