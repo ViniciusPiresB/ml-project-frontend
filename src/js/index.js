@@ -29,7 +29,15 @@ const sleep = (s) => new Promise((res) => setTimeout(res, s * 1000));
 })();
 
 const generateTable = async (orders) => {
-  const keys = ["title", "quantity", "username", "date_of_order", "variation"];
+  const keys = [
+    "count",
+    "title",
+    "quantity",
+    "username",
+    "date_of_order",
+    "manufacturing_ending_date",
+    "variation"
+  ];
 
   const tbl = document.getElementById("table");
   const tblExistingBody = document.getElementById("tbody");
@@ -41,7 +49,16 @@ const generateTable = async (orders) => {
     const row = document.createElement("tr");
     row.classList.add("order");
 
-    for (let j = 0; j < 5; j++) {
+    for (let j = 0; j < 7; j++) {
+      if (keys[j] == "count") {
+        const cell = document.createElement("td");
+        const cellText = document.createTextNode(i + 1);
+
+        cell.appendChild(cellText);
+        row.appendChild(cell);
+        continue;
+      }
+
       if (keys[j] == "variation") {
         const variations = orders[i][keys[j]];
 
@@ -67,16 +84,7 @@ const generateTable = async (orders) => {
       const cell = document.createElement("td");
 
       if (keys[j] == "date_of_order") {
-        const utcDate = new Date(orders[i][keys[j]]);
-        utcDate.setHours(utcDate.getHours() + 4);
-        const brDateString = utcDate.toLocaleString("en-GB", {
-          timeZone: "America/Sao_Paulo"
-        });
-
-        const dayMonth = brDateString.substring(0, 5);
-        const hour = brDateString.substring(12, 17);
-
-        const hourDayMonth = `${hour} ${dayMonth}`;
+        const hourDayMonth = convertDate(orders[i][keys[j]]);
 
         const cellText = document.createTextNode(hourDayMonth);
 
@@ -85,7 +93,17 @@ const generateTable = async (orders) => {
         continue;
       }
 
-      const cellText = document.createTextNode(orders[i][keys[j]]);
+      let cellText = document.createTextNode(orders[i][keys[j]]);
+
+      if (keys[j] == "manufacturing_ending_date") {
+        const dateOfManufacturing = convertDate(orders[i][keys[j]]);
+        let valueTextNode = "";
+
+        valueTextNode = dateOfManufacturing;
+        if (!dateOfManufacturing) valueTextNode = "-";
+
+        cellText = document.createTextNode(valueTextNode);
+      }
 
       cell.appendChild(cellText);
       row.appendChild(cell);
@@ -100,4 +118,21 @@ const generateTable = async (orders) => {
 
   tbl.appendChild(tblBody);
   ordersTable.appendChild(tbl);
+};
+
+const convertDate = (utcDate) => {
+  if (!utcDate) return null;
+
+  const utcDateTime = new Date(utcDate);
+  utcDateTime.setHours(utcDateTime.getHours() + 4);
+  const brDateString = utcDateTime.toLocaleString("en-GB", {
+    timeZone: "America/Sao_Paulo"
+  });
+
+  const dayMonth = brDateString.substring(0, 5);
+  const hour = brDateString.substring(12, 17);
+
+  const hourDayMonth = `${hour} ${dayMonth}`;
+
+  return hourDayMonth;
 };
