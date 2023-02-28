@@ -67,6 +67,7 @@ const generateTable = async (orders) => {
           const nameTextCell = document.createTextNode(variations[k].name);
 
           nameCell.appendChild(nameTextCell);
+          nameCell.appendChild(document.createElement("br"));
         }
         row.appendChild(nameCell);
 
@@ -75,6 +76,7 @@ const generateTable = async (orders) => {
           const valueTextCell = document.createTextNode(variations[k].value);
 
           valueCell.appendChild(valueTextCell);
+          valueCell.appendChild(document.createElement("br"));
         }
         row.appendChild(valueCell);
 
