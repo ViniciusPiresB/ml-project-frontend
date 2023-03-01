@@ -63,8 +63,17 @@ const generateTable = async (orders) => {
         const variations = orders[i][keys[j]];
 
         const nameCell = document.createElement("td");
+
+        if (variations.length == 0) {
+          const nameTextCell = document.createTextNode("-");
+          nameCell.appendChild(nameTextCell);
+          row.appendChild(nameCell);
+        }
+
         for (let k = 0; k < variations.length; k++) {
-          const nameTextCell = document.createTextNode(variations[k].name);
+          const variationName = variations[k].name;
+
+          const nameTextCell = document.createTextNode(variationName);
 
           nameCell.appendChild(nameTextCell);
           nameCell.appendChild(document.createElement("br"));
@@ -72,6 +81,13 @@ const generateTable = async (orders) => {
         row.appendChild(nameCell);
 
         const valueCell = document.createElement("td");
+
+        if (variations.length == 0) {
+          const valueTextCell = document.createTextNode("-");
+          valueCell.appendChild(valueTextCell);
+          row.appendChild(valueCell);
+        }
+
         for (let k = 0; k < variations.length; k++) {
           const valueTextCell = document.createTextNode(variations[k].value);
 
@@ -105,6 +121,8 @@ const generateTable = async (orders) => {
         if (!dateOfManufacturing) {
           valueTextNode = "-";
           row.classList.add("table-danger");
+        } else {
+          if (isExpired(orders[i][keys[j]])) row.classList.add("table-danger");
         }
 
         cellText = document.createTextNode(valueTextNode);
@@ -140,4 +158,15 @@ const convertDate = (utcDate) => {
   const hourDayMonth = `${hour} ${dayMonth}`;
 
   return hourDayMonth;
+};
+
+const isExpired = (utcManufacturingDate) => {
+  const dateManufacturing = new Date(utcManufacturingDate);
+  const dateNow = new Date();
+
+  dateManufacturing.setHours(dateManufacturing.getHours() + 4);
+
+  if (dateNow > dateManufacturing) return true;
+
+  return false;
 };
