@@ -102,7 +102,10 @@ const generateTable = async (orders) => {
         let valueTextNode = "";
 
         valueTextNode = dateOfManufacturing;
-        if (!dateOfManufacturing) valueTextNode = "-";
+        if (!dateOfManufacturing) {
+          valueTextNode = "-";
+          row.classList.add("table-danger");
+        }
 
         cellText = document.createTextNode(valueTextNode);
       }
