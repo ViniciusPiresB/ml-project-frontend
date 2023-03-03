@@ -32,6 +32,7 @@ const generateTable = async (orders) => {
   const keys = [
     "count",
     "title",
+    "value",
     "quantity",
     "username",
     "date_of_order",
@@ -49,7 +50,7 @@ const generateTable = async (orders) => {
     const row = document.createElement("tr");
     row.classList.add("order");
 
-    for (let j = 0; j < 7; j++) {
+    for (let j = 0; j < 8; j++) {
       if (keys[j] == "count") {
         const cell = document.createElement("td");
         const cellText = document.createTextNode(i + 1);
