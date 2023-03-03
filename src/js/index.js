@@ -129,6 +129,9 @@ const generateTable = async (orders) => {
         cellText = document.createTextNode(valueTextNode);
       }
 
+      if (keys[j] == "value")
+        cellText = document.createTextNode("R$" + orders[i][keys[j]]);
+
       cell.appendChild(cellText);
       row.appendChild(cell);
     }
